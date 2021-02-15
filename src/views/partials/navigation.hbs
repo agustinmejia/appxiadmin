@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container">
     <a class="navbar-brand" href="/">
-      <i class="fas fa-link"></i> Favorite Links
+      <img src="https://mystorage.loginweb.dev/storage/Projects/appxi/1icon-512x512.png" style="width: 30px" alt="Appxiadmin"> Appxi Admin
     </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav"
       aria-expanded="false" aria-label="Toggle navigation">
@@ -13,27 +13,29 @@
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
             aria-haspopup="true" aria-expanded="false">
-          Links
+          Administración
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="/links">All Links</a>
+            <a class="dropdown-item" href="/customers">Clientes</a>
+            <a class="dropdown-item" href="/drivers">Conductores</a>
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="/links/add">Add A Link</a>
+            <a class="dropdown-item" href="/services">Servicios</a>
+            {{!--  <a class="dropdown-item" href="/links/add">Add A Link</a> --}}
           </div>
         </li>
-        <li class="nav-item">
+        {{!-- <li class="nav-item">
           <a class="nav-link" href="/profile">Profile</a>
-        </li>
+        </li> --}}
         <li class="nav-item">
-          <a class="nav-link" href="/logout">Logout</a>
+          <a class="nav-link" href="/logout">Salir</a>
         </li>
         {{else}}
         <li class="nav-item">
-          <a class="nav-link" href="/signin">SignIn</a>
+          <a class="nav-link" href="/signin">Login</a>
         </li>
-        <li class="nav-item">
+        {{!-- <li class="nav-item">
           <a class="nav-link" href="/signup">SignUp</a>
-        </li>
+        </li> --}}
         {{/if}}
       </ul>
     </div>

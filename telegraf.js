@@ -1,6 +1,7 @@
 'use strict';
 
 const axios = require('axios')
+const fs = require('fs')
 const config = require(`./src/config.js`);
 const messages = require(`${__dirname}/messages.js`);
 
@@ -20,8 +21,13 @@ const servicesController = require(`${__dirname}/app/controllers/servicesControl
 
 // * Welcome
 bot.start((ctx) => {
-    // ctx.replyWithContact('+59175199157', 'Agustin Mejia');
-    welcome(ctx);
+    ctx.telegram.sendMessage(ctx.chat.id, messages.greeting, {
+        reply_markup: {
+            inline_keyboard: [
+                [{text: 'Pedir taxi \u{1f696}', callback_data: "newService"}, {text: 'Ver tutorial \u{1f3ac}', callback_data: "viewTutorial"}]
+            ]
+        }
+    });
 });
 
 bot.hears(['hi', 'Hi', 'HI', 'hola', 'Hola', 'HOLA'], (ctx) => {
@@ -42,13 +48,10 @@ async function createUser(ctx){
 async function welcome(ctx){
     let user = await createUser(ctx);
     let { first_name } = ctx.message.from;
-    // let service = servicesController.findLastServiceByUser();
-    // console.log(service);
-    // return;
     ctx.telegram.sendMessage(ctx.chat.id, `\u{1f44b} Hola ${first_name}, ${messages.customer.saludo}`, {
         reply_markup: {
             inline_keyboard: [
-                [{text: 'Si \u{2705}', callback_data: "newService"}, {text: 'No \u{274c}', callback_data: "NO"}]
+                [{text: 'Si \u{2705}', callback_data: "newService"}, {text: 'No \u{274c}', callback_data: "noService"}]
             ]
         }
     });
@@ -58,8 +61,16 @@ async function welcome(ctx){
 bot.action('newService', ctx => {
     ctx.reply(messages.customer.pedir_ubicacion);
 });
-bot.action('NO', ctx => {
+bot.action('noService', ctx => {
     ctx.reply('Gracias por ingresar a nuestro chat asistente, hasta luego!')
+});
+
+bot.action('viewTutorial', ctx => {
+    ctx.reply('Enviando video...');
+    ctx.replyWithVideo({
+        source: fs.createReadStream(messages.help.video)
+    })
+
 });
 
 
@@ -160,6 +171,8 @@ bot.action('noCancelService', async ctx => {
 
 async function selectVehicle(ctx, userId, vehicleType, resend = false){
     let userLocation = await customersController.lastLocationByUserCode(userId);
+    console.log(userLocation)
+    // return;
     var driverAvailable = 0;
     if(userLocation.length){
         if(userLocation[0].location_status == 0){
@@ -224,7 +237,7 @@ bot.action('aceptar_solicitud', async ctx => {
         if(location.length){
             // Actualizar ubicación de usuario a en camino "2"
             await customersController.updateColumnLocation('status', 2, location[0].location_id);
-            ctx.telegram.sendMessage(location[0].code, `\u{1f44d} Tu solicitud de taxi aceptada!!!`);
+            ctx.telegram.sendMessage(location[0].code, `\u{1f44d} Tu solicitud de taxi aceptada por el conductor ${driver[0].name}!!!`);
             // Actualizar estado del conducto a ocupado "2"
             await driversController.updateColumn('status', 2, id);
         }
@@ -482,31 +495,26 @@ function chooseVehicle(ctx, chat_id, message){
     });
 }
 
-bot.hears('Imagen de contacto', async ctx => {
+bot.hears('Imagen de contacto \u{1f4f7}', async ctx => {
     let { id } = ctx.update.message.from;
     await customersController.createProccess(id, 'update_avatar_driver');
     ctx.reply('Tómate o elige una fotografía y envíala');
 });
 
-bot.hears('Tipo de vehículo', async ctx => {
+bot.hears('Tipo de vehículo \u{1f695}', async ctx => {
     let { id } = ctx.update.message.from;
-    console.log(id)
     chooseVehicle(ctx, id, `¿Qué tipo de vehículo conduces?`);
 });
 
-bot.hears('Ver perfil', async ctx => {
+bot.hears('Ver perfil \u{1f5bc}', async ctx => {
     let { id } = ctx.update.message.from;
     let driver = await driversController.find(id);
-    let defaultImg = 'https://mystorage.loginweb.dev/storage/Projects/appxi/icon-512x512.png';
+    let defaultImg = 'https://mystorage.loginweb.dev/storage/Projects/appxi/1icon-512x512.png';
     if(driver.length){
-        return ctx.replyWithPhoto({ url: driver[0].avatar ? `${config.telegram.api}/file/bot${config.telegram.token}/${driver[0].avatar}` : defaultImg },
+        return ctx.replyWithPhoto({ url: driver[0].avatar ? driver[0].avatar : defaultImg },
             {
                 caption: `${driver[0].name}, conductor de ${driver[0].vehicle_type}.`,
-                parse_mode: 'Markdown',
-                // ...Markup.inlineKeyboard([
-                //     Markup.button.callback('Plain', 'plain'),
-                //     Markup.button.callback('Italic', 'italic')
-                // ])
+                parse_mode: 'Markdown'
             }
         )
     }
@@ -531,7 +539,7 @@ bot.on('photo', async ctx => {
 
         switch (name) {
             case 'update_avatar_driver':
-                await driversController.updateColumn('avatar', file_path, code);
+                await driversController.updateColumn('avatar', `${config.telegram.api}/file/bot${config.telegram.token}/${file_path}`, code);
                 ctx.reply('Imagen de contacto actualizada!');
                 await customersController.deleteProccess(code);
                 // ctx.replyWithPhoto({

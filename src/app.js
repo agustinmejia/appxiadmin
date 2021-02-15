@@ -56,6 +56,9 @@ app.use(require('./routes/index.routes'));
 app.use(require('./routes/auth.routes'));
 app.use(require('./routes/user.routes'));
 app.use('/links', require('./routes/links.routes'));
+app.use('/customers', require('./routes/customers.routes'));
+app.use('/drivers', require('./routes/drivers.routes'));
+app.use('/services', require('./routes/services.routes'));
 
 // Middleware
 app.use(bodyParser.urlencoded({extended:true}));

@@ -1,13 +1,15 @@
 <main class="index">
     <header class="masthead d-flex">
         <div class="container text-center my-auto">
-            <h1 class="mb-1">Favorite Links</h1>
+            <h1 class="mb-1">Appxi Admin</h1>
             <h3 class="mb-5">
-                <em>Store your favorite Website's Links</em>
+                <em>Administración de servicios de taxis</em>
             </h3>
+            {{#unless user}}
             <a class="btn btn-primary btn-lg" href="/signin">
-                Let's get started
+                login
             </a>
+            {{/unless}}
         </div>
         <div class="overlay"></div>
     </header>

@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
   <meta charset="UTF-8">
-  <title>Notes App</title>
+  <title>Appxi Admin</title>
+  <link rel="shortcut icon" href="https://mystorage.loginweb.dev/storage/Projects/appxi/1icon-512x512.png" type="image/x-icon">
   {{!-- GOOGLE FONTS --}}
   <link href="https://fonts.googleapis.com/css?family=Oswald" rel="stylesheet">
   {{!-- BOOTSTRAP 4 --}}
@@ -27,5 +28,14 @@
     crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
     crossorigin="anonymous"></script>
+
+  {{!-- DataTable --}}
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.23/css/jquery.dataTables.css">
+  <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.js"></script>
+  <script>
+    $(document).ready( function () {
+        $('.data-table').DataTable();
+    });
+  </script>
 </body>
 </html>

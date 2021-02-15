@@ -75,7 +75,7 @@ module.exports = {
         });
     },
     lastLocationByUserCode: (code) => {
-        let query = `SELECT u.*, l.id as location_id, l.vehicle_type, l.status as location_status FROM customers as u, customer_locations as l WHERE u.id = l.customer_id and u.code = ${code} ORDER BY l.id DESC LIMIT 1`;
+        let query = `SELECT u.*, l.id as location_id, l.vehicle_type, l.status as location_status, l.latitude, l.longitude FROM customers as u, customer_locations as l WHERE u.id = l.customer_id and u.code = ${code} ORDER BY l.id DESC LIMIT 1`;
         return new Promise(function (resolve, reject) {
             connection.query(query, function (err, results) {
                 if (err) return reject(err);
