@@ -8,6 +8,7 @@
                 <thead>
                     <tr>
                         <th>Conductor</th>
+                        <th>Pasajero</th>
                         <th>Estado</th>
                         <th>Puntuación</th>
                         <th>Tipo de pago</th>
@@ -17,7 +18,8 @@
                 <tbody>
                     {{#each services}}
                     <tr>
-                        <td>{{driver_id}}</td>
+                        <td>{{driver}}</td>
+                        <td>{{customer}}</td>
                         <td>{{status}}</td>
                         <td>{{rating}}</td>
                         <td>{{type_payment}}</td>
