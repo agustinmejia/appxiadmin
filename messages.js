@@ -7,7 +7,7 @@ module.exports = {
     },
     driver: {
         command: {
-            registrarse: '/r',
+            registrarse: '/registro',
             editar: '/editar',
             pago: '/pago',
             ocupado: '/ocupado'

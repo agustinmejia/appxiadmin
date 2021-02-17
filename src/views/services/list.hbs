@@ -1,37 +1,41 @@
 <div class="container p-4">
-    <div class="row">
-        <div class="col-md-12 mb-5">
-            <h3>Lista de servicios de taxi</h3>
-        </div>
-        <div class="col-md-12">
-            <table class="data-table table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Conductor</th>
-                        <th>Pasajero</th>
-                        <th>Estado</th>
-                        <th>Puntuación</th>
-                        <th>Tipo de pago</th>
-                        <th>Fecha</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {{#each services}}
-                    <tr>
-                        <td>{{driver}}</td>
-                        <td>{{customer}}</td>
-                        <td>{{status}}</td>
-                        <td>{{rating}}</td>
-                        <td>{{type_payment}}</td>
-                        <td>{{timeago created_at}}</td>
-                    </tr>
-                    {{else}}
-                    <tr>
-                        <td colspan="3">No hay registros</td>
-                    </tr>
-                    {{/each}}
-                </tbody>
-            </table>
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12 mb-5">
+                    <h3>Lista de servicios de taxi</h3>
+                </div>
+                <div class="col-md-12">
+                    <table class="data-table table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Conductor</th>
+                                <th>Pasajero</th>
+                                <th>Estado</th>
+                                <th>Puntuación</th>
+                                <th>Tipo de pago</th>
+                                <th>Fecha</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each services}}
+                            <tr>
+                                <td>{{driver}}</td>
+                                <td>{{customer}}</td>
+                                <td>{{status}}</td>
+                                <td>{{rating}}</td>
+                                <td>{{type_payment}}</td>
+                                <td>{{timeago created_at}}</td>
+                            </tr>
+                            {{else}}
+                            <tr>
+                                <td colspan="3">No hay registros</td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </div>
