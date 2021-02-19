@@ -9,6 +9,7 @@
                     <table class="data-table table table-bordered">
                         <thead>
                             <tr>
+                                <th></th>
                                 <th>Código</th>
                                 <th>Nombre</th>
                                 <th>Creado</th>
@@ -18,6 +19,7 @@
                         <tbody>
                             {{#each customers}}
                             <tr>
+                                <td><img src="{{avatar}}" style="height: 40px" alt="{{name}}"></td>
                                 <td>{{code}}</td>
                                 <td>{{name}}</td>
                                 <td>{{timeago created_at}}</td>

@@ -8,8 +8,6 @@ const flash = require('connect-flash');
 const MySQLStore = require('express-mysql-session')(session);
 const bodyParser = require('body-parser');
 
-const driversController = require(`${__dirname}/../app/controllers/driversController.js`);
-
 const { database, port } = require('./config');
 
 // Intializations
@@ -59,23 +57,7 @@ app.use('/links', require('./routes/links.routes'));
 app.use('/customers', require('./routes/customers.routes'));
 app.use('/drivers', require('./routes/drivers.routes'));
 app.use('/services', require('./routes/services.routes'));
-
-// Middleware
-app.use(bodyParser.urlencoded({extended:true}));
-
-
-// Routes
-app.get('/service', (req, res) => {
-    res.sendFile(__dirname + '/views/map.html');
-});
-
-app.get('/driver/update/location/:code/:lat/:lng', async (req, res) => {
-    let {code, lat, lng} = req.params;
-    let position = {
-        lat, lng 
-    }
-    await driversController.updateColumn('last_location', JSON.stringify(position), code);
-});
+app.use('/map', require('./routes/map.routes'));
 
 // Public
 app.use(express.static(path.join(__dirname, 'public')));

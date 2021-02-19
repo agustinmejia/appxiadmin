@@ -2,15 +2,15 @@ const authCtrl = {};
 
 const passport = require('passport');
 
-authCtrl.renderSignUp = (req, res) => {
-    res.render('auth/signup');
-};
+// authCtrl.renderSignUp = (req, res) => {
+//     res.render('auth/signup');
+// };
 
-authCtrl.signUp = passport.authenticate('local.signup', {
-    successRedirect: '/profile',
-    failureRedirect: '/signup',
-    failureFlash: true
-});
+// authCtrl.signUp = passport.authenticate('local.signup', {
+//     successRedirect: '/profile',
+//     failureRedirect: '/signup',
+//     failureFlash: true
+// });
 
 authCtrl.renderSignIn = (req, res, next) => {
     res.render('auth/signin');

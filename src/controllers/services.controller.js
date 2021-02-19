@@ -8,4 +8,10 @@ servicesCtrl.renderServices = async (req, res) => {
     res.render('services/list', { services });
 }
 
+servicesCtrl.renderMap = async (req, res) => {
+  let { id } = req.params;
+  console.log(id)
+  res.render('map1');
+}
+
 module.exports = servicesCtrl;

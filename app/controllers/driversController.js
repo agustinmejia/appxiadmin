@@ -57,5 +57,15 @@ module.exports = {
                 return resolve({results});
             });
         });
-    }
+    },
+    createLocation: (code, latitude, longitude) => {
+        let date = moment().format('YYYY-MM-DD hh:mm:ss');
+        let query = `INSERT INTO driver_locations (driver_code, latitude, longitude, created_at, updated_at, deleted_at) VALUES ("${code}", "${latitude}", "${longitude}", "${ date }", "${ date }", NULL)`;
+        return new Promise(function (resolve, reject) {
+            connection.query(query, function (err, results) {
+                if (err) return reject(err);
+                return resolve(results.insertId);
+            });
+        });
+    },
 }
