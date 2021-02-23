@@ -8,10 +8,13 @@ servicesCtrl.renderServices = async (req, res) => {
     res.render('services/list', { services });
 }
 
-servicesCtrl.renderMap = async (req, res) => {
-  let { id } = req.params;
-  console.log(id)
-  res.render('map1');
+servicesCtrl.renderMapMonitor = async (req, res) => {
+  res.render('maps/monitor');
+}
+
+servicesCtrl.getDataMonitor = async (req, res) => {
+  const locations = await pool.query(` SELECT last_location as location, avatar, name from drivers`);
+  res.json(locations)
 }
 
 module.exports = servicesCtrl;

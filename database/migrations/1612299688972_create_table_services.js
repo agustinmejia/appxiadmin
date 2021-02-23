@@ -8,6 +8,7 @@ module.exports = {
             rating int(11) NULL DEFAULT NULL,
             time int(11) NULL DEFAULT '5',
             type_payment varchar(191) COLLATE utf8mb4_unicode_ci NULL,
+            destination varchar(191) COLLATE utf8mb4_unicode_ci NULL,
             created_at timestamp NULL DEFAULT NULL,
             updated_at timestamp NULL DEFAULT NULL,
             deleted_at timestamp NULL DEFAULT NULL

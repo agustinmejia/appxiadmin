@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="icon" type="image/png" href="https://mystorage.loginweb.dev/storage/Projects/appxi/icon-512x512.png">
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    </head>
+    <body>
+        <div id="map"></div>
+        <!-- Google maps -->
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCfhTHyaCn2bXEKvT13E0YEutlQY1bmfoM&callback=initMap&libraries=&v=weekly" defer></script>
+        <style type="text/css">
+            /* Always set the map height explicitly to define the size of the div
+            * element that contains the map. */
+            #map {
+                height: 90%;
+            }
+            /* Optional: Makes the sample page fill the window. */
+            html,
+            body {
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+        </style>
+        <script>
+            var map, infoWindow;
+            var markers = [];
+            var currentLocation = { lat: -14.835473, lng: -64.904180 };
+            function initMap() {
+                map = new google.maps.Map(document.getElementById("map"), {
+                    center: currentLocation,
+                    zoom: 14,
+                });
+            }
+            $(document).ready(function(){
+                getDriversLocation(map);
+                
+                //Actualizar ubicaciones
+                setInterval(()=> {
+                    DeleteMarkers()
+                    getDriversLocation(map);
+                }, 20000)
+            });
+
+            function getDriversLocation(map){
+                fetch(`/services/monitor/driver/get`)
+                .then(res => res.json())
+                .then(res => {
+                    res.map(item => {
+                        if(item.location){
+                            let location = JSON.parse(item.location);
+                            let icon = {
+                                url: item.avatar,
+                                scaledSize: new google.maps.Size(30, 30),
+                                origin: new google.maps.Point(0,0),
+                                anchor: new google.maps.Point(0, 0)
+                            };
+                            let marker = new google.maps.Marker({
+                                position: {lat: parseFloat(location.lat), lng: parseFloat(location.lng)},
+                                map: map,
+                                icon,
+                                title: item.name,
+                                draggable:true
+                            });
+                            markers.push(marker);
+                        }
+                    })
+                })
+            }
+
+            function DeleteMarkers() {
+                //Loop through all the markers and remove
+                for (var i = 0; i < markers.length; i++) {
+                    markers[i].setMap(null);
+                }
+                markers = [];
+            };
+        </script>
+    </body>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+</html>

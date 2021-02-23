@@ -10,7 +10,8 @@ module.exports = {
             registrarse: '/registro',
             editar: '/editar',
             pago: '/pago',
-            ocupado: '/ocupado'
+            activo: '/activo',
+            ocupado: '/ocupado',
         }
     },
     help: {

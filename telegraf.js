@@ -494,7 +494,34 @@ bot.command(messages.driver.command.editar, async ctx => {
     
 });
 
-// Opciones del conductor
+// Conductor activo
+bot.command(messages.driver.command.activo, async ctx => {
+    let { from } = ctx.message;
+    console.log(from)
+    let driver = await driversController.find(from.id).then(results => results);
+    if(driver.length > 0){
+        await driversController.updateColumn('status', 1, from.id);
+            ctx.telegram.sendMessage(ctx.chat.id, `Has cambiado tu estado a activo, recibirás notificaciones de nuevos pasajeros`,
+            Markup.keyboard(
+                [[ Markup.button.text(messages.driver.command.ocupado)]]
+            )
+        );
+    }
+})
+
+// Conductor ocupado
+bot.command(messages.driver.command.ocupado, async ctx => {
+    let { from } = ctx.message;
+    let driver = await driversController.find(from.id).then(results => results);
+    if(driver.length > 0){
+        await driversController.updateColumn('status', 2, from.id);
+            ctx.telegram.sendMessage(ctx.chat.id, `Has cambiado tu estado a ocupado, no recibirás notificaciones`,
+            Markup.keyboard(
+                [[ Markup.button.text(messages.driver.command.activo)]]
+            )
+        );
+    }
+})
 
 bot.action('setDriverVehicleMoto', async ctx => {
     driversController.setVehicleType(ctx);

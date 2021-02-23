@@ -55,7 +55,7 @@ module.exports = {
     },
     // Actualizar solo una columna
     updateColumn: (key, value, id) => {
-        let query = `UPDATE services SET ${key} = "${value}" where id = "${id}"`;
+        let query = `UPDATE services SET ${key} = '${value}' where id = "${id}"`;
         return new Promise(function (resolve, reject) {
             connection.query(query, function (err, results) {
                 if (err) return reject(err);

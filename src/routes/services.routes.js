@@ -3,13 +3,14 @@ const router = express.Router();
 
 const { isLoggedIn } = require('../lib/auth');
 
-const { renderServices, renderMap } = require('../controllers/services.controller')
+const { renderServices, renderMap, renderMapMonitor, getDataMonitor } = require('../controllers/services.controller')
 
 // Authorization
 router.use(isLoggedIn);
 
 // Routes
 router.get('/', isLoggedIn, renderServices);
-router.get('/:id', renderMap);
+router.get('/monitor/driver', isLoggedIn, renderMapMonitor);
+router.get('/monitor/driver/get', isLoggedIn, getDataMonitor);
 
 module.exports = router;
