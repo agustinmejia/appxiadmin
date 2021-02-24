@@ -206,8 +206,8 @@ bot.action('noCancelService', async ctx => {
 
 async function selectVehicle(ctx, userId, vehicleType, resend = false){
     let userLocation = await customersController.lastLocationByUserCode(userId);
-    // return;
     var driverAvailable = 0;
+    let {first_name, last_name} = ctx.update.callback_query.from;
     if(userLocation.length){
         if(userLocation[0].location_status == 0){
             ctx.reply('Este servicio de taxi ya fue cancelado, puedes pedir otro enviando tu ubicación');
@@ -217,7 +217,7 @@ async function selectVehicle(ctx, userId, vehicleType, resend = false){
                 res.results.map(driver => {
                     if(driver.status == 1){
                         driverAvailable +=1;
-                        ctx.telegram.sendMessage(driver.code, `Hola ${driver.name}, un cliente solicitó una carrera!`,
+                        ctx.telegram.sendMessage(driver.code, `Hola ${driver.name}, el cliente ${first_name} ${last_name ? last_name : ''} solicitó una carrera!`,
                             Markup.inlineKeyboard(
                                 [Markup.button.url('Ver ubicación', `${URL}/map/${userLocation[0].location_id}/location`), {text: `Aceptar ID:${userLocation[0].location_id}`, callback_data: "aceptar_solicitud"}]
                             )
@@ -271,7 +271,11 @@ bot.action('aceptar_solicitud', async ctx => {
         if(location.length){
             // Actualizar ubicación de usuario a en camino "2"
             await customersController.updateColumnLocation('status', 2, location[0].location_id);
-            ctx.telegram.sendMessage(location[0].code, `\u{1f44d} Tu solicitud de taxi aceptada por el conductor ${driver[0].name}!!!`);
+            ctx.telegram.sendMessage(location[0].code, `\u{1f44d} Tu solicitud de taxi aceptada por el conductor ${driver[0].name}!!!`,
+                Markup.inlineKeyboard(
+                    [Markup.button.url('Ver perfil del conductor', `${URL}/driver/${driver[0].id}`)]
+                )
+            );
             // Actualizar estado del conducto a ocupado "2"
             await driversController.updateColumn('status', 2, id);
         }
@@ -477,6 +481,7 @@ bot.command(messages.driver.command.registrarse, async ctx => {
         await driversController.create(from).then(results => results);
         chooseVehicle(ctx, ctx.chat.id, `Hola ${from.first_name}, Bienvenido a nuestra plataforma, gracias por registrarte! ¿Qué tipo de vehículo conduces?`);
     }else{
+        await driversController.updateColumn('name', `${from.first_name} ${from.last_name ? from.last_name : ''}`, from.id);
         ctx.reply(`Hola ${from.first_name}, ya estás registrado en nuestra plataforma.`);
         editDriverInfo(ctx);
     }
@@ -486,6 +491,7 @@ bot.command(messages.driver.command.editar, async ctx => {
     let { from } = ctx.message;
     let driver = await driversController.find(from.id).then(results => results);
     if(driver.length > 0){
+        await driversController.updateColumn('name', `${from.first_name} ${from.last_name ? from.last_name : ''}`, from.id);
         ctx.reply(`Hola ${from.first_name}, ya estás registrado en nuestra plataforma.`);
         editDriverInfo(ctx);
     }else{
@@ -636,8 +642,17 @@ bot.on('contact', async ctx => {
     ctx.reply('Número de contacto actualizado \u{1f44f}');
 })
 
-bot.command('/qr', async ctx => {
+bot.command('/banco', async ctx => {
     return ctx.replyWithPhoto({ url: config.qrSimple},
+        {
+            caption: `El cliente debe escanear el código para realizar pago`,
+            parse_mode: 'Markdown',
+        }
+    )
+})
+
+bot.command('/tigo', async ctx => {
+    return ctx.replyWithPhoto({ url: config.tigomoney},
         {
             caption: `El cliente debe escanear el código para realizar pago`,
             parse_mode: 'Markdown',

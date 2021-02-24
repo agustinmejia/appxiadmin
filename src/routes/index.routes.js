@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
-const { renderIndex } = require('../controllers/index.conroller');
+const { renderIndex, renderdriverInfo } = require('../controllers/index.conroller');
 
 router.get('/', renderIndex);
+router.get('/driver/:id', renderdriverInfo);
 
 module.exports = router;

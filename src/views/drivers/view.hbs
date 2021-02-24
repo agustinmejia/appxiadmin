@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <title>Appxi</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="icon" type="image/png" href="https://mystorage.loginweb.dev/storage/Projects/appxi/icon-512x512.png">
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    </head>
+    <body>
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                        <img id="userAvatar" class="card-img-top" alt="{{driver.name}}">
+                        <div class="card-body">
+                            <h4 class="card-title">{{driver.name}} <br> <small class="text-muted">Conductor de {{driver.vehicle_type}}</small> </h4>
+                            <div class="my-rating jq-stars"></div>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <script src="/js/rating.js"></script>
+    <link rel="stylesheet" href="/css/rating.css">
+    <script>
+        $(document).ready(function(){
+            const defaultAvatar =  'https://mystorage.loginweb.dev/storage/Projects/appxi/1icon-512x512.png';
+            const userAvatar = '{{driver.avatar}}'
+            const rating = '{{driver.rating}}'
+            $('#userAvatar').attr('src', userAvatar ? userAvatar : defaultAvatar);
+            $(".my-rating").starRating({
+                initialRating: rating ? rating : 0,
+                strokeColor: '#894A00',
+                strokeWidth: 10,
+                starSize: 25,
+                readOnly: true
+            });
+        });
+    </script>
+</html>

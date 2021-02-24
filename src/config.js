@@ -9,6 +9,7 @@ module.exports = {
     url: 'http://127.0.0.1',
     debug: true,
     qrSimple: 'https://mystorage.loginweb.dev/storage/Projects/appxi/bgCompartir.png',
+    tigomoney: 'https://mystorage.loginweb.dev/storage/Projects/appxi/tigo.jpeg',
     port: process.env.PORT || 4000,
     telegram: {
         token: '1451212413:AAE-6y0BXIuMqOS90ER0X8FYZRHobBMSP5o',

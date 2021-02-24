@@ -25,7 +25,7 @@ module.exports = {
     },
     create: async (data) => {
         let date = moment().format('YYYY-MM-DD hh:mm:ss');
-        let query = `INSERT INTO customers (code, name, created_at, updated_at, deleted_at) VALUES ("${data.id}", "${data.first_name} ${data.last_name}", "${ date }", "${ date }", NULL)`;
+        let query = `INSERT INTO customers (code, name, created_at, updated_at, deleted_at) VALUES ("${data.id}", "${data.first_name} ${data.last_name ? data.last_name : ''}", "${ date }", "${ date }", NULL)`;
         let insert = new Promise(function (resolve, reject) {
             connection.query(query, function (err, results) {
                 if (err) return reject(err);

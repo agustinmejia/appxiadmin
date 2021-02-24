@@ -18,7 +18,7 @@
                         }
                     </style>
                     <script>
-                        var map, infoWindow;
+                        var map, infoWindow, position;
                         var currentLocation = { lat: -14.835473, lng: -64.904180 };
                         function initMap() {
                             map = new google.maps.Map(document.getElementById("map"), {
@@ -27,7 +27,7 @@
                             });
 
                             {{#each locations}}
-                                let position = { lat: {{latitude}}, lng: {{longitude}} }
+                                position = { lat: {{latitude}}, lng: {{longitude}} }
                                 new google.maps.Marker({
                                     position,
                                     map: map,
