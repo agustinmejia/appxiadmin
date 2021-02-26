@@ -35,7 +35,7 @@ module.exports = {
         });
     },
     findServiceByLocation: (location_id) => {
-        let query = `SELECT * FROM services WHERE location_id = ${location_id}`;
+        let query = `SELECT * FROM services WHERE location_id = ${location_id} and status > 0`;
         return new Promise(function (resolve, reject) {
             connection.query(query, function (err, results) {
                 if (err) return reject(err);

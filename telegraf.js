@@ -321,6 +321,11 @@ async function sendTimeArrival(ctx, time){
             ctx.reply('Para ver la ruta que debes seguir presiona el siguiente botón', Markup.inlineKeyboard([
                 Markup.button.url('Ver ruta', `${URL}/map/${service[0].id}/service`),
             ]));
+            ctx.telegram.sendMessage(id, `Puedes cancelar el servicio presionando el botón de abajo`,
+                Markup.keyboard(
+                    [[ Markup.button.text(messages.driver.command.cancelar)]]
+                )
+            );
             ctx.telegram.sendMessage(service[0].code, `Tu taxi llegará en aproximadamente ${time} minutos. \u{23f1}`, {
                 reply_markup: {
                     inline_keyboard: [
@@ -503,11 +508,10 @@ bot.command(messages.driver.command.editar, async ctx => {
 // Conductor activo
 bot.command(messages.driver.command.activo, async ctx => {
     let { from } = ctx.message;
-    console.log(from)
     let driver = await driversController.find(from.id).then(results => results);
     if(driver.length > 0){
         await driversController.updateColumn('status', 1, from.id);
-            ctx.telegram.sendMessage(ctx.chat.id, `Has cambiado tu estado a activo, recibirás notificaciones de nuevos pasajeros`,
+        ctx.telegram.sendMessage(ctx.chat.id, `Has cambiado tu estado a activo, recibirás notificaciones de nuevos pasajeros`,
             Markup.keyboard(
                 [[ Markup.button.text(messages.driver.command.ocupado)]]
             )
@@ -527,7 +531,19 @@ bot.command(messages.driver.command.ocupado, async ctx => {
             )
         );
     }
-})
+});
+
+bot.command(messages.driver.command.cancelar, async ctx => {
+    let { id } = ctx.message.from;
+    ctx.telegram.sendMessage(id, `Estás seguro que deseas cancelar el servicio?`, {
+        reply_markup: {
+            inline_keyboard: [
+                [{text: 'Si \u{2705}', callback_data: "cancelServiceDriver"}, {text: 'No \u{274c}', callback_data: "noCancelServiceDriver"}]
+            ]
+        }
+    });
+    
+});
 
 bot.action('setDriverVehicleMoto', async ctx => {
     driversController.setVehicleType(ctx);
@@ -544,10 +560,33 @@ bot.action('setDriverVehicleAuto', async ctx => {
 function editDriverInfo(ctx){
     ctx.telegram.sendMessage(ctx.chat.id, `Puedes editar tu información seleccionando alguna de las siguientes opciones:`,
         Markup.keyboard(
-            [[Markup.button.contactRequest('Número de contacto \u{1f4f1}'), Markup.button.text('Imagen de contacto \u{1f4f7}')],[ Markup.button.text('Tipo de vehículo \u{1f695}'), Markup.button.text('Ver perfil \u{1f5bc}')]]
+            [[Markup.button.contactRequest('Número de contacto \u{1f4f1}'), Markup.button.text('Imagen de contacto \u{1f4f7}')],[ Markup.button.text('Tipo de vehículo \u{1f695}'), Markup.button.text('Ver perfil \u{1f5bc}')],[Markup.button.text('Ayuda \u{1f4a1}')]]
         )
     );
 }
+
+// Cancelar servicio por parte del conductor
+bot.action('cancelServiceDriver', async ctx => {
+    let { id } = ctx.update.callback_query.from;
+    let service = await servicesController.findLast(id).then(res => res[0]);
+    if(service.status > 0){
+        await servicesController.updateColumn('status', 0, service.id);
+        await driversController.updateColumn('status', 2, service.driver_code);
+        await customersController.updateColumnLocation('status', 1, service.location_id);
+        ctx.reply(`Has cancelado el servicio y estás inactivo para recibir notificaciones.\nPuedes activarte nuevamente presinando el siguiente texto ${messages.driver.command.activo}`);
+        ctx.telegram.sendMessage(service.code, `Lo sentimos, el conductor no podrá ir a recogerte, Deseas reenviar la solicitud?`, {
+            reply_markup: {
+                inline_keyboard: [
+                    [{text: `Reenviar solicitud`, callback_data: "resendService"}, {text: `Cancelar solicitud`, callback_data: "handleCancelService"}]
+                ]
+            }
+        });
+    }
+});
+
+bot.action('noCancelServiceDriver', async ctx => {
+    ctx.reply('\u{1F44D} Tu pasajero aguarda por tu servicio.');
+})
 
 function chooseVehicle(ctx, chat_id, message){
     ctx.telegram.sendMessage(chat_id, message, {
@@ -598,6 +637,14 @@ bot.hears('Ver perfil \u{1f5bc}', async ctx => {
             }
         )
     }
+});
+
+bot.hears('Ayuda \u{1f4a1}', async ctx => {
+    ctx.reply(`1.- Editar su información ${messages.driver.command.editar} \n2.- Para recibir notificaciones ${messages.driver.command.activo} \n3.- Para desabilitarse ${messages.driver.command.ocupado}`)
+});
+
+bot.hears(messages.driver.command.ayuda, async ctx => {
+    ctx.reply(`1.- Editar su información ${messages.driver.command.editar} \n2.- Para recibir notificaciones ${messages.driver.command.activo} \n3.- Para desabilitarse ${messages.driver.command.ocupado}`)
 });
 
 bot.on('photo', async ctx => {

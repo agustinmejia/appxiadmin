@@ -12,6 +12,8 @@ module.exports = {
             pago: '/pago',
             activo: '/activo',
             ocupado: '/ocupado',
+            ayuda: '/ayuda',
+            cancelar: '/cancelar',
         }
     },
     help: {

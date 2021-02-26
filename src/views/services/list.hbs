@@ -9,23 +9,30 @@
                     <table class="data-table table table-bordered">
                         <thead>
                             <tr>
+                                <th>ID</th>
                                 <th>Conductor</th>
                                 <th>Pasajero</th>
                                 <th>Estado</th>
                                 <th>Puntuación</th>
                                 <th>Tipo de pago</th>
                                 <th>Fecha</th>
+                                <th>Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
                             {{#each services}}
                             <tr>
+                                <td>{{id}}</td>
                                 <td>{{driver}}</td>
                                 <td>{{customer}}</td>
-                                <td>{{status}}</td>
-                                <td>{{rating}}</td>
+                                <td class="td-status" data-id="{{id}}" data-status="{{status}}" data-rating="{{rating}}"></td>
+                                <td><div id="rating-{{id}}"></div></td>
                                 <td>{{type_payment}}</td>
                                 <td>{{timeago created_at}}</td>
+                                <td>
+                                    <button onclick="changeStatus({{id}}, 2)" type="button" {{#ifDiff status 1}} disabled {{/ifDiff}} class="btn btn-primary btn-sm" title="Concluir servicio"><span class="fa fa-check"></span></button>                                   
+                                    <button onclick="changeStatus({{id}})" type="button" {{#ifDiff status 1}} disabled {{/ifDiff}} class="btn btn-danger btn-sm" title="Eliminar servicio"><span class="fa fa-trash"></span></button>
+                                </td>
                             </tr>
                             {{else}}
                             <tr>
@@ -39,3 +46,53 @@
         </div>
     </div>
 </div>
+
+<script src="/js/rating.js"></script>
+<link rel="stylesheet" href="/css/rating.css">
+<script>
+    $(document).ready(function(){
+        $('.td-status').each(function(){
+            let id = $(this).data('id');
+            let status = $(this).data('status');
+            let rating = $(this).data('rating');
+            switch (status) {
+                case 1:
+                    $(this).html('<span class="badge badge-success">En proceso</span>')
+                    break;
+                case 2:
+                    $(this).html('<span class="badge badge-primary">Concluido</span>')
+                    break;
+                case 0:
+                    $(this).html('<span class="badge badge-danger">Anulada</span>')
+                    break;
+                default:
+                    break;
+            }
+
+            if(rating != ''){
+                $(`#rating-${id}`).starRating({
+                    initialRating: rating,
+                    strokeColor: '#894A00',
+                    strokeWidth: 5,
+                    starSize: 20,
+                    readOnly: true
+                });
+            }else{
+                $(`#rating-${id}`).text('Sin puntuar')
+            }
+
+        });
+    });
+
+    function changeStatus(id, value = 0){
+        let message = 'Deseas eliminar el siguiente servicio?';
+        switch (value) {
+            case 2:
+                message = 'Desea concluir el servicio?'
+                break;
+        }
+        if(confirm(message)){
+            window.location = `/services/status/${value}/${id}`
+        }
+    }
+</script>

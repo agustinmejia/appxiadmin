@@ -1,0 +1,45 @@
+<div class="container p-4">
+    <div class="row">
+        <div class="col-md-6 mx-auto mt-5">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Editar conductor</h5>
+                    <form action="/drivers/edit/{{driver.id}}" method="POST">
+                        <div class="form-group">
+                            <label>Nombre completo</label>
+                            <input type="text" name="name" class="form-control" value="{{driver.name}}" placeholder="Nombre completo" autofocus>
+                        </div>
+                        <div class="form-group">
+                            <label>N&deg; de celular</label>
+                            <input type="text" name="phone" class="form-control" value="{{driver.phone}}" placeholder="Número de celular">
+                        </div>
+                        <div class="form-group">
+                            <label>Tipo de vehículo</label>
+                            <select name="vehicle_type" class="form-control">
+                                <option value="" disabled>Elije el tipoo de vehículo</option>
+                                <option value="Motocicleta" {{#ifIgual driver.vehicle_type 'Motocicleta'}} selected {{/ifIgual}} >Motocicleta</option>
+                                <option value="Automóvil" {{#ifIgual driver.vehicle_type 'Automóvil'}} selected {{/ifIgual}}>Automóvil</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Estado</label>
+                            <select name="status" class="form-control">
+                                <option value="1" {{#ifIgual driver.status 1}} selected {{/ifIgual}} >Disponible</option>
+                                <option value="2" {{#ifIgual driver.status 2}} selected {{/ifIgual}}>Ocupado</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-info btn-block">
+                                Actualizar <span class="fa fa-check"></span>
+                            </button>
+                            <a href="/drivers" class="btn btn-secondary btn-block">
+                                Cancelar <span class="fa fa-times"></span>
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

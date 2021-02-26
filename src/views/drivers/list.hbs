@@ -12,11 +12,11 @@
                                 <th></th>
                                 <th>Código</th>
                                 <th>Nombre</th>
-                                <th>Rating</th>
                                 <th>Nro de celular</th>
                                 <th>Tipo de vehículo</th>
                                 <th>Estado</th>
                                 <th>Creado</th>
+                                <th>Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -24,16 +24,27 @@
                             <tr>
                                 <td><img src="{{avatar}}" style="height: 40px" alt="{{name}}"></td>
                                 <td>{{code}}</td>
-                                <td>{{name}}</td>
-                                <td>{{rating}}</td>
+                                <td class="td-driver" data-id="{{id}}" data-rating="{{rating}}">
+                                    {{name}}
+                                    <div id="rating-{{id}}"></div>
+                                </td>
                                 <td>{{phone}}</td>
                                 <td>{{vehicle_type}}</td>
-                                <td>{{status}}</td>
+                                <td>
+                                    {{#ifIgual status 1}}
+                                    <span class="badge badge-success">Disponible</span>
+                                    {{else}}
+                                    <span class="badge badge-primary">Ocupado</span>
+                                    {{/ifIgual}}
+                                </td>
                                 <td>{{timeago created_at}}</td>
+                                <td>
+                                    <a href="/drivers/edit/{{id}}" class="btn btn-info btn-sm" title="Editar conductor"><span class="fa fa-edit"></span></a>
+                                </td>
                             </tr>
                             {{else}}
                             <tr>
-                                <td colspan="3">No hay registros</td>
+                                <td colspan="8">No hay registros</td>
                             </tr>
                             {{/each}}
                         </tbody>
@@ -43,3 +54,23 @@
         </div>
     </div>
 </div>
+
+<script src="/js/rating.js"></script>
+<link rel="stylesheet" href="/css/rating.css">
+<script>
+    $(document).ready(function(){
+        $('.td-driver').each(function(){
+            let id = $(this).data('id');
+            let rating = $(this).data('rating');
+
+            $(`#rating-${id}`).starRating({
+                initialRating: rating ? rating : 0,
+                strokeColor: '#894A00',
+                strokeWidth: 5,
+                starSize: 20,
+                readOnly: true
+            });
+
+        });
+    });
+</script>
